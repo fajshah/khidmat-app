@@ -7,9 +7,8 @@ import '../models/booking.dart';
 
 class ApiService {
   static String get baseUrl {
-    if (kIsWeb) return 'http://127.0.0.1:8000/api';
-    if (Platform.isAndroid) return 'http://10.0.2.2:8000/api';
-    return 'http://127.0.0.1:8000/api';
+    // Return live Vercel URL for Web and Android
+    return 'https://khidmat-8875z3bv7-fajshahs-projects.vercel.app/api';
   }
 
   Future<RequestResponse> processRequest(String message) async {
