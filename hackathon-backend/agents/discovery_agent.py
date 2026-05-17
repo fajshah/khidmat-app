@@ -71,7 +71,7 @@ def discover_providers(intent: dict) -> dict:
     except Exception as e:
         print(f"Error in DiscoveryAgent: {e}")
         return {
-            "agent": "DiscoveryAgent (Fallback)",
+            "agent": f"DiscoveryAgent (Fallback) - Error: {e}",
             "service_searched": intent.get("service_type", ""),
             "location_searched": intent.get("location", ""),
             "providers_found": 0,
