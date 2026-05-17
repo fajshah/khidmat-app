@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from models.schemas import UserRequest, BookingRequest
 from datetime import datetime
 import uuid
@@ -21,9 +22,11 @@ app.add_middleware(
 
 bookings_db = {}
 
-@app.get("/")
-async def root():
-    return {"message": "Khidmat API chal raha hai!", "status": "ok"}
+import os
+
+@app.get("/api/health")
+async def health_check():
+    return {"message": "Khidmat API is running!", "status": "ok"}
 
 @app.post("/api/request")
 async def process_request(req: UserRequest):
@@ -99,3 +102,7 @@ async def get_all_providers():
     with open(path) as f:
         providers = json.load(f)
     return {"success": True, "providers": providers}
+
+# Mount the static directory to serve the Flutter Web app (MUST BE AT THE END)
+if os.path.isdir("static"):
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
