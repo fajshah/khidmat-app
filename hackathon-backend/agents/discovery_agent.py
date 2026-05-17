@@ -58,7 +58,11 @@ def discover_providers(intent: dict) -> dict:
         
         # If the LLM failed to match any but we have providers, do a basic fallback just in case
         if not matched_providers and available_providers:
-             matched_providers = [p for p in available_providers if intent.get("service_type", "").lower() in p["service"].lower()]
+             service_type = intent.get("service_type", "").lower()
+             if service_type == "unknown" or not service_type:
+                 matched_providers = available_providers
+             else:
+                 matched_providers = [p for p in available_providers if service_type in p["service"].lower()]
         
         return {
             "agent": "DiscoveryAgent",
@@ -70,10 +74,15 @@ def discover_providers(intent: dict) -> dict:
         
     except Exception as e:
         print(f"Error in DiscoveryAgent: {e}")
+        service_type = intent.get("service_type", "").lower()
+        if service_type == "unknown" or not service_type:
+            matched_providers = available_providers
+        else:
+            matched_providers = [p for p in available_providers if service_type in p["service"].lower()]
         return {
             "agent": f"DiscoveryAgent (Fallback) - Error: {e}",
             "service_searched": intent.get("service_type", ""),
             "location_searched": intent.get("location", ""),
-            "providers_found": 0,
-            "providers": []
+            "providers_found": len(matched_providers),
+            "providers": matched_providers
         }
