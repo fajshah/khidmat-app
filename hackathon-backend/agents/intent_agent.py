@@ -48,9 +48,23 @@ def extract_intent(user_input: str) -> dict:
         
     except Exception as e:
         print(f"Error in IntentAgent: {e}")
-        # Fallback in case of failure
+        
+        # Intelligent Fallback using basic keyword matching if API fails
+        fallback_service = "unknown"
+        lower_input = user_input.lower()
+        if "ac" in lower_input or "cooling" in lower_input:
+            fallback_service = "ac technician"
+        elif "plumb" in lower_input or "pipe" in lower_input or "leak" in lower_input:
+            fallback_service = "plumber"
+        elif "electric" in lower_input or "bijli" in lower_input or "wire" in lower_input:
+            fallback_service = "electrician"
+        elif "tutor" in lower_input or "parha" in lower_input or "teach" in lower_input:
+            fallback_service = "tutor"
+        elif "clean" in lower_input or "safai" in lower_input or "maid" in lower_input:
+            fallback_service = "cleaner"
+            
         return {
-            "service_type": "unknown",
+            "service_type": fallback_service,
             "location": "not specified",
             "time_preference": "flexible",
             "urgency": "normal",
